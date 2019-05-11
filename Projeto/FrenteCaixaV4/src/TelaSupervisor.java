@@ -1,0 +1,350 @@
+
+import Classes.ChecaVazio;
+import Classes.Conexao;
+import Classes.MD5;
+import java.awt.Color;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.net.URL;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.AbstractAction;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
+import javax.swing.JOptionPane;
+import javax.swing.KeyStroke;
+
+public class TelaSupervisor extends javax.swing.JFrame {
+
+    Conexao con = new Conexao();
+    ResultSet rs;
+    boolean possoSair = false;
+    DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+    String tela_seguinte = "";
+
+    public TelaSupervisor(String tela_seguinte) {
+        initComponents();
+        URL url = this.getClass().getResource("/imagens/icone.png");
+        Image iconeTitulo = Toolkit.getDefaultToolkit().getImage(url);
+        this.setIconImage(iconeTitulo);
+        EnterPraSenha();
+        ConfiguraESC();
+        ConfiguraCloseOperation();
+        possoSair = false;
+        this.tela_seguinte = tela_seguinte;
+    }
+
+    private void ConfiguraCloseOperation() {
+        addWindowListener(
+                new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent we) {
+                TelaPrincipal.AparecerTela = true;
+                dispose();
+            }
+        }
+        );
+    }
+
+    public boolean ComparaDatas(Date vencimento, Date atual) {
+        boolean data;
+        if (vencimento.before(atual)) {
+            data = true;
+        } else data = !vencimento.after(atual);
+        return data;
+    }
+
+    private void ConfiguraESC() {
+        InputMap inputMap = this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "forward");
+        this.getRootPane().setInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW, inputMap);
+        this.getRootPane().getActionMap().put("forward", new AbstractAction() {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                TelaPrincipal.AparecerTela = true;
+                dispose();
+            }
+        });
+    }
+
+    private void EnterPraSenha() {
+        InputMap inputMap2 = this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        inputMap2.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "forward2");
+        this.getRootPane().setInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW, inputMap2);
+        this.getRootPane().getActionMap().put("forward2", new AbstractAction() {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                jPFSenha.requestFocus();
+                EnterPraEntrar();
+            }
+        });
+    }
+
+    private void EnterPraEntrar() {
+        InputMap inputMap2 = this.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        inputMap2.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "forward2");
+        this.getRootPane().setInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW, inputMap2);
+        this.getRootPane().getActionMap().put("forward2", new AbstractAction() {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                jBAutorizarActionPerformed(arg0);
+            }
+        });
+    }
+
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jLabel3 = new javax.swing.JLabel();
+        jTFLogin = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        jPFSenha = new javax.swing.JPasswordField();
+        jBAutorizar = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jBCancelar = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("LIFES CREATIVE - Autorização Supervisor");
+        setResizable(false);
+        addWindowFocusListener(new java.awt.event.WindowFocusListener() {
+            public void windowGainedFocus(java.awt.event.WindowEvent evt) {
+            }
+            public void windowLostFocus(java.awt.event.WindowEvent evt) {
+                formWindowLostFocus(evt);
+            }
+        });
+
+        jLabel3.setText("Login: ");
+
+        jTFLogin.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jTFLoginFocusGained(evt);
+            }
+        });
+        jTFLogin.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jTFLoginKeyTyped(evt);
+            }
+        });
+
+        jLabel4.setText("Senha:");
+
+        jPFSenha.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jPFSenhaFocusGained(evt);
+            }
+        });
+        jPFSenha.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jPFSenhaKeyTyped(evt);
+            }
+        });
+
+        jBAutorizar.setText("Autorizar");
+        jBAutorizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBAutorizarActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel1.setText("Autorização Supervisor");
+
+        jBCancelar.setText("Cancelar");
+        jBCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jBCancelarActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(108, 108, 108)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(68, 68, 68)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jBAutorizar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                                .addComponent(jBCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(10, 10, 10)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jPFSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jTFLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                .addContainerGap(88, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addGap(25, 25, 25)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTFLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jPFSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jBAutorizar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jBCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(24, Short.MAX_VALUE))
+        );
+
+        pack();
+        setLocationRelativeTo(null);
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void jTFLoginFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTFLoginFocusGained
+        // TODO add your handling code here:
+        EnterPraSenha();
+    }//GEN-LAST:event_jTFLoginFocusGained
+
+    private void jTFLoginKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTFLoginKeyTyped
+        if (!jTFLogin.getText().equals("")) {
+            jTFLogin.setBackground(Color.white);
+        }
+        EnterPraSenha();
+    }//GEN-LAST:event_jTFLoginKeyTyped
+
+    private void jPFSenhaFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jPFSenhaFocusGained
+        EnterPraEntrar();
+    }//GEN-LAST:event_jPFSenhaFocusGained
+
+    private void jPFSenhaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jPFSenhaKeyTyped
+        jPFSenha.setBackground(Color.white);
+    }//GEN-LAST:event_jPFSenhaKeyTyped
+
+    private void jBAutorizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAutorizarActionPerformed
+        String login = jTFLogin.getText();
+        String senha = new String(jPFSenha.getPassword());
+        if (login.equals("") || senha.equals("")) {
+            JOptionPane.showMessageDialog(null, "Por favor, preencha todos os campos", "LIFES CREATIVE - Autorização Supervisor", JOptionPane.ERROR_MESSAGE);
+            ChecaVazio cv = new ChecaVazio();
+            cv.ChecaVazio(jPFSenha, senha);
+            cv.ChecaVazio(jTFLogin, login);
+            EnterPraSenha();
+        } else {
+            String loginCript = MD5.criptografar(login);
+            String senhaCript = MD5.criptografar(senha);
+            try {
+                boolean testeLogin = false;
+                String timeStamp = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+                Date atual = df.parse(timeStamp);
+                boolean logou = false;
+                rs = con.Select("SELECT nome_operador, login_operador, senha_operador, tipo_operador, id_fc_operador, validade_operador FROM fc_operador USE INDEX (id_fc_operador)");
+                while (rs.next()) {
+                    boolean valida = ComparaDatas(df.parse(rs.getString("validade_operador")), atual);
+                    if (loginCript.equals(rs.getString("login_operador")) && senhaCript.equals(rs.getString("senha_operador")) && valida == false && logou == false) {
+                        testeLogin = true;
+                        logou = true;
+                        if (rs.getInt("tipo_operador") >= 2) 
+                        {
+                            if (tela_seguinte.equals("TelaReimpressao")) {
+                                new TelaReimpressao().setVisible(true);
+                                possoSair = true;
+                                dispose();
+                            } 
+                            else if (tela_seguinte.equals("TelaCancelamento")) {
+                                new TelaCancelamento().setVisible(true);
+                                possoSair = true;
+                                dispose();
+                            } 
+                            else if (tela_seguinte.equals("TelaConfiguracoes")) 
+                            {
+                                if (rs.getInt("tipo_operador") >= 9) {
+                                    new TelaConfiguracoes().setVisible(true);
+                                    possoSair = true;
+                                    dispose();
+                                } 
+                                else                                 {
+                                    JOptionPane.showMessageDialog(null, "Operador não autorizado", "LIFES CREATIVE - Autorização Supervisor", JOptionPane.ERROR_MESSAGE);
+                                    jTFLogin.setText("");
+                                    jPFSenha.setText("");
+                                    jTFLogin.requestFocus();
+                                    EnterPraSenha();
+                                }
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Operador não autorizado", "LIFES CREATIVE - Autorização Supervisor", JOptionPane.ERROR_MESSAGE);
+                            jTFLogin.setText("");
+                            jPFSenha.setText("");
+                            jTFLogin.requestFocus();
+                            EnterPraSenha();
+                        }
+                    }
+                }
+                if (testeLogin == false) {
+                    JOptionPane.showMessageDialog(null, "Login, senha e/ou validade inválidos", "LIFES CREATIVE - Autorização Supervisor", JOptionPane.ERROR_MESSAGE);
+                    jTFLogin.setText("");
+                    jPFSenha.setText("");
+                    jTFLogin.requestFocus();
+                    EnterPraSenha();
+                }
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(null, "Erro de MySQL", "LIFES CREATIVE - Autorização Supervisor", JOptionPane.ERROR_MESSAGE);
+                Logger.getLogger(TelaLogin.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ParseException ex) {
+                JOptionPane.showMessageDialog(null, "Erro na conversão da data", "LIFES CREATIVE - Autorização Supervisor", JOptionPane.ERROR_MESSAGE);
+                Logger.getLogger(TelaSupervisor.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_jBAutorizarActionPerformed
+
+    private void jBCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBCancelarActionPerformed
+        TelaPrincipal.AparecerTela = true;
+        dispose();
+    }//GEN-LAST:event_jBCancelarActionPerformed
+
+    private void formWindowLostFocus(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowLostFocus
+        // TODO add your handling code here:
+        if (possoSair == false) {
+            requestFocus();
+            toFront();
+        }
+    }//GEN-LAST:event_formWindowLostFocus
+
+    /**
+     * @param args the command line arguments
+     */
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jBAutorizar;
+    private javax.swing.JButton jBCancelar;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JPasswordField jPFSenha;
+    private javax.swing.JTextField jTFLogin;
+    // End of variables declaration//GEN-END:variables
+}
